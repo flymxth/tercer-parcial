@@ -33,3 +33,20 @@ BEGIN
 END $$
 
 CALL spBorrarPais('AUT') $$
+
+-----------------------------------------------------------------------
+
+CREATE PROCEDURE CalcularIngresosTotales (
+    @fecha_inicio DATE,
+    @fecha_fin DATE,
+    @ingresos_totales DECIMAL(18, 2) OUTPUT
+)
+AS
+BEGIN
+    -- Calcula los ingresos totales para el rango de fechas especificado
+    SELECT @ingresos_totales = SUM((UnitPrice * Quantity) * (1 - Discount))
+    FROM [ORDER DETAILS] AS od
+    INNER JOIN Orders AS o ON od.OrderID = o.OrderID
+    WHERE o.OrderDate BETWEEN @fecha_inicio AND @fecha_fin;
+END;
+
